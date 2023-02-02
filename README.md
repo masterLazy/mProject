@@ -1,3 +1,2 @@
 # mProject
-The projects in this repository are some of my personal projects.
-The special projects won't be here.
+我的一般公开项目，不包括mLib。
