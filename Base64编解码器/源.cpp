@@ -1,8 +1,8 @@
 #include <iostream>
 #include <iomanip>
-#include "../mLib/mCode.h"
-#include "../mLib/mFunction.h"
-#include "../mLib/mFile.h"
+#include <mLib/mCode.h>
+#include <mLib/mFunction.h>
+#include <mLib/mFile.h>
 using namespace std;
 using namespace mlib;
 
@@ -14,8 +14,8 @@ struct Data
 };
 const long npos = -1;
 
-const long min_size = 64;	//Ñ°ÕÒµ½µÄÎÄ¼ş×îĞ¡µÄ´óĞ¡
-const long find_range = 64;	//Ñ°ÕÒÎÄ¼şÃûµÄ×î´ó·¶Î§
+const long min_size = 64;	//å¯»æ‰¾åˆ°çš„æ–‡ä»¶æœ€å°çš„å¤§å°
+const long find_range = 64;	//å¯»æ‰¾æ–‡ä»¶åçš„æœ€å¤§èŒƒå›´
 
 int main()
 {
@@ -39,7 +39,7 @@ int main()
 	long size, eta;
 	int h, m, s;
 	size_t decodeSize;
-	//×Ö·û´®¾àÀë
+	//å­—ç¬¦ä¸²è·ç¦»
 	string cmds[] = { "en","de","enf","def","scan","exit" };
 	while (true)
 	{
@@ -49,13 +49,13 @@ int main()
 		if (cmd == "exit")break;
 
 		cout << "< ";
-		//±àÂë×Ö·û´®
+		//ç¼–ç å­—ç¬¦ä¸²
 		if (cmd == "en")
 		{
 			cin >> par;
 			cout << Base64_encode(par, par.size()) << endl;
 		}
-		//½âÂë×Ö·û´®
+		//è§£ç å­—ç¬¦ä¸²
 		else if (cmd == "de")
 		{
 			cin >> par;
@@ -66,13 +66,13 @@ int main()
 			}
 			else cout << temp << endl;
 		}
-		//±àÂëÎÄ¼ş
+		//ç¼–ç æ–‡ä»¶
 		else if (cmd == "enf")
 		{
 			getline(cin, par);
-			par = par.substr(1);//È¥µô¿Õ¸ñ
+			par = par.substr(1);//å»æ‰ç©ºæ ¼
 			filename = par + "_en.txt";
-			//´ò¿ªÎÄ¼ş
+			//æ‰“å¼€æ–‡ä»¶
 			res = true;
 			res &= f1.open(par, "rb");
 			if (res)res &= f2.open(filename, "wt");
@@ -84,25 +84,25 @@ int main()
 				continue;
 			}
 			size = f1.get_size();
-			//¿ªÊ¼±àÂë
+			//å¼€å§‹ç¼–ç 
 			cout << "Encoding. . .";
 			t0 = clock();
 			while (true)
 			{
-				//¶ÁÈ¡
-				readSize = f1.read(buf, 1023, sizeof(char), 1023);//²»ÊÇ1024£¬ÒòÎªÒªÈ¡3µÄ±¶Êı
+				//è¯»å–
+				readSize = f1.read(buf, 1023, sizeof(char), 1023);//ä¸æ˜¯1024ï¼Œå› ä¸ºè¦å–3çš„å€æ•°
 
-				//±àÂëºÍĞ´Èë
+				//ç¼–ç å’Œå†™å…¥
 				temp = Base64_encode(string(buf, readSize), readSize);
 				f2.write(temp);
 
-				//ÏÔÊ¾×´Ì¬
+				//æ˜¾ç¤ºçŠ¶æ€
 				if (f1.get_cur() % (1024 * 1024 - 1) == 0)
 				{
 					cout << "\r< Encoding. . .";
 					printPB((float)f1.get_cur() / size);
 
-					//¼ÆÊ±²¢Ô¤²â
+					//è®¡æ—¶å¹¶é¢„æµ‹
 					speed = float(1024 * 1024 - 1) / (clock() - t0) * 1000;
 					cout << " ";
 					printSize(speed);
@@ -118,20 +118,20 @@ int main()
 
 				if (readSize < 3 || f1.get_cur() == f1.get_size())break;
 			}
-			//¹Ø±ÕÎÄ¼ş
+			//å…³é—­æ–‡ä»¶
 			f1.close();
 			f2.close();
 
 			cout << endl;
 			cout << "Encoding completed! Save at \"" << filename << "\"." << endl;
 		}
-		//½âÂëÎÄ¼ş
+		//è§£ç æ–‡ä»¶
 		else if (cmd == "def")
 		{
 			getline(cin, par);
-			par = par.substr(1);//È¥µô¿Õ¸ñ
+			par = par.substr(1);//å»æ‰ç©ºæ ¼
 			filename = par + "_de";
-			//´ò¿ªÎÄ¼ş
+			//æ‰“å¼€æ–‡ä»¶
 			res = true;
 			res &= f1.open(par, "rt");
 			if (res)res &= f2.open(filename, "wb");
@@ -143,15 +143,15 @@ int main()
 				continue;
 			}
 			size = f1.get_size();
-			//¿ªÊ¼½âÂë
+			//å¼€å§‹è§£ç 
 			cout << "Decoding. . .";
 			t0 = clock();
 			while (true)
 			{
-				//¶ÁÈ¡
-				readSize = f1.read(buf, 1024, sizeof(char), 1024);//ÒªÈ¡4µÄ±¶Êı
+				//è¯»å–
+				readSize = f1.read(buf, 1024, sizeof(char), 1024);//è¦å–4çš„å€æ•°
 
-				//½âÂëºÍĞ´Èë
+				//è§£ç å’Œå†™å…¥
 				temp = Base64_decode(string(buf, readSize), &decodeSize, &success);
 				if (!success)
 				{
@@ -162,13 +162,13 @@ int main()
 				}
 				f2.write((void*)temp.c_str(), sizeof(char), decodeSize);
 
-				//ÏÔÊ¾×´Ì¬
+				//æ˜¾ç¤ºçŠ¶æ€
 				if (f1.get_cur() % (1024 * 1024) == 0)
 				{
 					cout << "\r< Decoding. . .";
 					printPB((float)f1.get_cur() / size);
 
-					//¼ÆÊ±²¢Ô¤²â
+					//è®¡æ—¶å¹¶é¢„æµ‹
 					speed = float(1024 * 1024 - 1) / (clock() - t0) * 1000;
 					cout << " ";
 					printSize(speed);
@@ -184,7 +184,7 @@ int main()
 
 				if (readSize < 3 || f1.get_cur() == f1.get_size())break;
 			}
-			//¹Ø±ÕÎÄ¼ş
+			//å…³é—­æ–‡ä»¶
 			f1.close();
 			f2.close();
 
@@ -194,13 +194,13 @@ int main()
 				cout << "Decoding completed! Save at \"" << filename << "\"." << endl;
 			}
 		}
-		//É¨ÃèÎÄ¼ş
+		//æ‰«ææ–‡ä»¶
 		else if (cmd == "scan")
 		{
 			getline(cin, par);
-			par = par.substr(1);//È¥µô¿Õ¸ñ
+			par = par.substr(1);//å»æ‰ç©ºæ ¼
 			filename = par + "_de";
-			//´ò¿ªÎÄ¼ş
+			//æ‰“å¼€æ–‡ä»¶
 			res = f1.open(par, "rt");
 			if (!res)
 			{
@@ -210,17 +210,17 @@ int main()
 			}
 			size = f1.get_size();
 
-			//¿ªÊ¼É¨Ãè
+			//å¼€å§‹æ‰«æ
 			vector<Data> v;
 			Data dTemp = { npos,npos };
 			long last = 0;
 			cout << "Scaning. . ." << endl;
 			while (f1.get_cur() != f1.get_size())
 			{
-				//¶ÁÈ¡
+				//è¯»å–
 				readSize = f1.read(buf, 4, sizeof(char), 4);
 
-				//³¢ÊÔ½âÂë
+				//å°è¯•è§£ç 
 				temp = Base64_decode(string(buf, readSize), &decodeSize, &success);
 				if (success && f1.get_cur() != f1.get_size())
 				{
@@ -233,20 +233,20 @@ int main()
 				{
 					if (dTemp.begin != npos)
 					{
-						//µ±Ç°ÎÄ¼ş½áÊøÁË
+						//å½“å‰æ–‡ä»¶ç»“æŸäº†
 						dTemp.end = f1.get_cur() - 5;
 						if (dTemp.begin != dTemp.end &&
 							//(dTemp.end - dTemp.begin + 1) % 4 == 0 &&
 							dTemp.end - dTemp.begin + 1 >= min_size)
 						{
-							//ĞşÑ§²Ù×÷¶Ô´ıĞşÑ§bug...
+							//ç„å­¦æ“ä½œå¯¹å¾…ç„å­¦bug...
 							if ((dTemp.end - dTemp.begin + 1) % 4 == 1)
 							{
 								cout << "Doing wonder operations . . . ";
 								dTemp.end--;
 							}
 
-							//³¢ÊÔÑ°ÕÒÆäÎÄ¼şÃû£¨´Ó(ÎÄ¼ş¿ªÍ·-1)¿ªÊ¼ÍùÇ°ÕÒµ¥Ë«ÒıºÅ£©
+							//å°è¯•å¯»æ‰¾å…¶æ–‡ä»¶åï¼ˆä»(æ–‡ä»¶å¼€å¤´-1)å¼€å§‹å¾€å‰æ‰¾å•åŒå¼•å·ï¼‰
 							long now = f1.get_cur();
 							long cnt = 0, begin = npos, end = npos;
 							char ch;
@@ -254,7 +254,7 @@ int main()
 							for (long i = 0; i < find_range; i++)
 							{
 								f1.read(&ch, 1, 1, 1);
-								//ÅĞ¶Ï
+								//åˆ¤æ–­
 								if (ch == '\'' || ch == '\"')
 								{
 									if (cnt == 1)
@@ -268,7 +268,7 @@ int main()
 									}
 									cnt++;
 								}
-								//Ç°ÒÆ1¸ö×Ö½Ú£¨Ïà¶ÔÓÚµ±Ç°ÊÇ2¸ö×Ö½Ú£©
+								//å‰ç§»1ä¸ªå­—èŠ‚ï¼ˆç›¸å¯¹äºå½“å‰æ˜¯2ä¸ªå­—èŠ‚ï¼‰
 								f1.set_cur(-2, SEEK_CUR);
 							}
 							if (begin != npos && end != npos)
@@ -281,7 +281,7 @@ int main()
 							}
 							else
 							{
-								//ÎŞÎÄ¼şÃû
+								//æ— æ–‡ä»¶å
 								if (dTemp.name == "")
 								{
 									char buf[16];
@@ -290,10 +290,10 @@ int main()
 								}
 							}
 							f1.set_cur(now, SEEK_SET);
-							//·ÅÈëvector
+							//æ”¾å…¥vector
 							v.push_back(dTemp);
 
-							//´òÓ¡Êı¾İ
+							//æ‰“å°æ•°æ®
 							cout << dTemp.name;
 
 							cout << "\tBegin: ";
@@ -304,17 +304,17 @@ int main()
 						}
 						else
 						{
-							//ÒÆµ½Õâ¸ö(ÎÄ¼ş¿ªÍ·+1)ÔÙÀ´
+							//ç§»åˆ°è¿™ä¸ª(æ–‡ä»¶å¼€å¤´+1)å†æ¥
 							f1.set_cur(dTemp.begin + 1, SEEK_SET);
 						}
-						//Çå¿ÕdTemp
+						//æ¸…ç©ºdTemp
 						dTemp.begin = npos;
 						dTemp.end = npos;
 						dTemp.name = "";
 					}
 					else if (f1.get_cur() != f1.get_size())
 					{
-						//Ç°ÒÆ3¸ö×Ö½Ú
+						//å‰ç§»3ä¸ªå­—èŠ‚
 						f1.set_cur(-3, SEEK_CUR);
 					}
 				}
@@ -332,7 +332,7 @@ int main()
 			{
 				for (int i = 0; i < v.size(); i++)
 				{
-					//´ò¿ªÎÄ¼ş
+					//æ‰“å¼€æ–‡ä»¶
 					res = f2.open(v[i].name, "wb");
 					if (!res)
 					{
@@ -340,19 +340,19 @@ int main()
 						f2.close();
 						continue;
 					}
-					//±ğµÄ×¼±¸
+					//åˆ«çš„å‡†å¤‡
 					size = v[i].end - v[i].begin + 1;
 					f1.set_cur(v[i].begin, SEEK_SET);
-					//¿ªÊ¼½âÂë
+					//å¼€å§‹è§£ç 
 					cout << "Decoding. . .";
 					t0 = clock();
 					while (f1.get_cur() < v[i].end)
 					{
-						//¶ÁÈ¡
+						//è¯»å–
 						long less = v[i].end - f1.get_cur() + 1;
 						readSize = f1.read(buf, 1024, sizeof(char), 1024 < less ? 1024 : less);
 
-						//½âÂëºÍĞ´Èë
+						//è§£ç å’Œå†™å…¥
 						temp = Base64_decode(string(buf, readSize), &decodeSize, &success);
 						if (!success)
 						{
@@ -364,7 +364,7 @@ int main()
 						//f2.write(buf, 1, readSize);
 					}
 
-					//¹Ø±ÕÎÄ¼ş
+					//å…³é—­æ–‡ä»¶
 					f2.close();
 
 					if (success)
@@ -377,10 +377,10 @@ int main()
 			{
 				cout << "Decode canceled." << endl;
 			}
-			//¹Ø±ÕÎÄ¼ş
+			//å…³é—­æ–‡ä»¶
 			f1.close();
 		}
-		//´íÎóÊäÈë
+		//é”™è¯¯è¾“å…¥
 		else
 		{
 			cout << "\"" << cmd << "\" is not a command. ";
