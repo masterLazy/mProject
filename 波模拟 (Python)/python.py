@@ -30,7 +30,7 @@ while True:
 	#迭代
 	for x in range(1,SIZE - 1):
 		for y in range(1,SIZE - 1):
-			#让一些点不参与迭代计算，让这些点
+			#让一些点不参与迭代计算，以让它们成为碰撞体
 			if	(x < SIZE // 3 - SIZE // 20 or x > SIZE // 3 + SIZE // 20) or ((y > SIZE // 4) and
 				(y < SIZE - 1 - SIZE // 4) and
 				(y < SIZE // 2 - SIZE // 8 or y > SIZE // 2 + SIZE // 8)):
@@ -46,7 +46,7 @@ while True:
 				#计算速度
 				v_map[y][x] += F / 4
 
-	#更行y值
+	#更新y值
 	for x in range(1,SIZE - 1):
 		for y in range(1,SIZE - 1):
 			y_map[y][x] += v_map[y][x]
