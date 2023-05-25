@@ -25,6 +25,13 @@ public:
 		mode=0;
 		rv=x;
 	}
+		
+	template<typename Ty2>
+	Value(Ty2 x=0)
+	{
+		mode=0;
+		rv=x;
+	}
 	
 	//Work, then return the result
 	Ty get() const
@@ -56,6 +63,7 @@ public:
 	}
 
 	//Derivation
+	//With something wrong!
 	Value<Ty> dvt(Value<Ty> &x) const
 	{
 		//Itself 
@@ -113,8 +121,34 @@ public:
 		res.opt=Opt::div;
 		return res;
 	}
+	Value<Ty> operator-() const
+	{
+		Value res;
+		static Value zero=0;
+		res.mode=1;
+		res.a=&zero;
+		res.b=&b;
+		res.opt=Opt::sub;
+		return res;
+	}
+	Ty operator=(Ty b)
+	{
+		set(b);
+		return b;
+	}
 	
 	//Other operator
+	//1/x
+	Value<Ty> rec() const
+	{
+		Value res;
+		static Value one=1;
+		res.mode=1;
+		res.a=&one;
+		res.b=&b;
+		res.opt=Opt::div;
+		return res;
+	} 
 	//a^b
 	Value<Ty> pow(const Value<Ty> &b) const
 	{
@@ -138,6 +172,25 @@ public:
 	Value<Ty> ln() const
 	{
 		return log(M_E);
+	}
+	
+	//friend-
+	//With something wrong!
+	Value<Ty> friend operator+(Ty a, const Value<Ty> &b)
+	{
+		return b+a;
+	}
+	Value<Ty> friend operator-(Ty a,const Value<Ty> &b)
+	{
+		return -b+a;
+	}
+	Value<Ty> friend operator*(Ty a,const Value<Ty> &b)
+	{
+		return b*a;
+	}
+	Value<Ty> friend operator/(Ty a,const Value<Ty> &b)
+	{
+		return b.rec()*a;
 	}
 	
 	//Compare
@@ -177,13 +230,13 @@ typedef Value<Math_F> ValueF;
 int main()
 {
 	ValueF x,y,d;
-	y=pow(x,ValueF(2));
+	y=x*2;
 	d=y.dvt(x);
 	
 	for(int i=-2;i<=2;i++)
 	{
 		x=i;
-		cout<<"x="<<i<<",\ty="<<y.get()<<",\tdy/dx="<<y.dvt(x).get()<<endl;
+		cout<<"x="<<i<<",\ty="<<y.get()<<",\tdy/dx="<<d.get()<<endl;
 	}
 	
 	return 0;
