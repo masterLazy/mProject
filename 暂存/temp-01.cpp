@@ -9,10 +9,11 @@ using namespace std;
 template<typename Ty>
 class Value
 {
-private:
+//private:
+public:
 	int mode;//0: real value;1
 	Ty rv;
-	Value *a=nullptr,*b=nullptr;
+	const Value *a=nullptr,*b=nullptr;
 	enum class Opt
 	{
 		add,sub,mlt,div,pow
@@ -26,7 +27,7 @@ public:
 	}
 	
 	//Work, then return the result
-	Ty get()
+	Ty get() const
 	{
 		if(mode==0)return rv;
 		else
@@ -52,12 +53,13 @@ public:
 		}
 		else return false;
 	}
-	
+
 	//Operations
-	Value<Ty> operator+(const Value<Ty> &a,const Value<Ty> &b)
+	Value operator+(const Value &b) const
 	{
-		Value<Ty> res;
-		res.a=&a;
+		Value res;
+		res.mode=1;
+		res.a=this;
 		res.b=&b;
 		res.opt=Opt::add;
 		return res;
@@ -68,5 +70,7 @@ typedef Value<Math_F> Value_F;
 
 int main()
 {
-
+	Value_F a=1, b=2;
+	auto c=a+b;
+	cout<<c.get()<<endl;
 }
