@@ -1,6 +1,7 @@
 //In the normal version, please remove this:
 typedef double Math_F;
 #include <cmath>
+#define M_E 2.718281828
 //
 
 #include <iostream> 
@@ -38,7 +39,7 @@ public:
 				case Opt::mlt:return a->get()*b->get();
 				case Opt::div:return a->get()/b->get();
 				case Opt::pow:return ::pow(a->get(),b->get());
-				case Opt::log:
+				case Opt::log:return ::log(a->get())/::log(b->get());
 			}
 		}
 	}
@@ -70,8 +71,8 @@ public:
 			case Opt::mlt:return a->dvt(x)*(*b)+(*a)*b->dvt(x);
 			//[f(x)/g(x)]'=[f'(x)g(x)-f(x)g'(x)]/[g(x)]^2
 			case Opt::div:return (a->dvt(x)*(*b)-(*a)*b->dvt(x))/((*b)*(*b));
-			//[f(x)^g(x)]'=f(x)^g(x)*{g'(x)*ln[f(x)]+g(x)/f(x)*f(x)}
-			case Opt::pow:return a.pow(*b)*(b->dvt()*)
+			//[f(x)^g(x)]'=f(x)^g(x)*{g'(x)*ln[f(x)]+g(x)/f(x)*f'(x)}
+			case Opt::pow:return a->pow(*b)*(b->dvt(x)*a->ln()+(*b)/(*a)*a->dvt(x));
 		}
 	}
 
@@ -114,6 +115,7 @@ public:
 	}
 	
 	//Other operator
+	//a^b
 	Value<Ty> pow(const Value<Ty> &b) const
 	{
 		Value res;
@@ -123,9 +125,19 @@ public:
 		res.opt=Opt::pow;
 		return res;
 	}
+	//log_b(a)
 	Value<Ty> log(const Value<Ty> &b) const
 	{
-		
+		Value res;
+		res.mode=1;
+		res.a=this;
+		res.b=&b;
+		res.opt=Opt::log;
+		return res;
+	}
+	Value<Ty> ln() const
+	{
+		return log(M_E);
 	}
 	
 	//Compare
