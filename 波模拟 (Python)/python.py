@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-SIZE = 100	#点阵的边长
+SIZE = 100	#点阵的宽度
 
 y_map = np.zeros([SIZE,SIZE],dtype='float32')	#各个点的纵坐标值（y值）
 v_map = np.zeros([SIZE,SIZE],dtype='float32')	#各个点的速度
