@@ -21,7 +21,7 @@ def draw(title):
 
 	plt.show()
 
-	plt.pause(0.00001)
+	plt.pause(1.0/30)
 
 while True:
 	draw(str(i))
