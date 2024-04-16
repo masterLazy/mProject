@@ -1,5 +1,5 @@
 # mProject
 
-## Introduction
+## 介绍
 
-mLazy's small projects will be published here.
+我的一些小型项目将在这里发布。
